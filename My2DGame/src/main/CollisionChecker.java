@@ -205,7 +205,7 @@ public class CollisionChecker {
 
 
 /* 儲存 尚未簡化前的 程式碼
-// 檢查 Entity 和 Object 之間的碰撞
+	// 檢查 Entity 和 Object 之間的碰撞
 	public int checkObject(Entity entity, boolean player) {
 		
 		int index = 999;	// 預設值 用於 沒有撞到 Object 的時候
@@ -258,7 +258,7 @@ public class CollisionChecker {
 		return index;
 	}
 
-// NPC OR MONSTER
+	// NPC OR MONSTER
 	public int checkEntity(Entity entity, Entity[] target) {
 		
 		int index = 999;	// 預設值 用於 沒有撞到 Entity 的時候

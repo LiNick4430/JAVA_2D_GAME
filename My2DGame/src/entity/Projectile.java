@@ -3,7 +3,7 @@ package entity;
 import main.GamePanel;
 
 // 投射物(Projectile)
-public class Projectile extends Entity{
+public abstract class Projectile extends Entity{
 
 	Entity user;
 	

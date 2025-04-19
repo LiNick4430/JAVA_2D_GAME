@@ -8,8 +8,12 @@ import main.GamePanel;
 
 public class NPC_OldMan extends Entity{
 	
+	GamePanel gp;
+	
 	public NPC_OldMan(GamePanel gp) {
 		super(gp);
+		
+		this.gp = gp;
 		
 		direction = "down";
 		speed = 1;

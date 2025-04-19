@@ -3,6 +3,8 @@ package main;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import entity.Entity;
+
 public class KeyHandler implements KeyListener{
 	
 	GamePanel gp;	
@@ -53,6 +55,10 @@ public class KeyHandler implements KeyListener{
 		else if (gp.gameState == gp.gameOverState) {
 			gameoOverState(code);
 		}
+		// TRADE STATE
+		else if (gp.gameState == gp.tradeState) {
+			tradeState(code);
+		}
 		
 		
 	}
@@ -74,6 +80,7 @@ public class KeyHandler implements KeyListener{
 		if (code == KeyEvent.VK_ENTER) {
 			switch (gp.ui.commandNum) {
 				case 0:
+					gp.restart();
 					gp.gameState = gp.playState;
 					gp.playMusic(0);
 					break;
@@ -156,36 +163,16 @@ public class KeyHandler implements KeyListener{
 	
 	public void characterState(int code) {
 		
-		if (code == KeyEvent.VK_C) {
+		if (code == KeyEvent.VK_C || code == KeyEvent.VK_ESCAPE) {
+			gp.ui.playerSlotCol = 0;
+			gp.ui.playerSlotRow = 0;
 			gp.gameState = gp.playState;
-		}
-		if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
-			if (gp.ui.slotRow != 0) {
-				gp.ui.slotRow--;
-				gp.playSE(9);
-			}		
-		}
-		if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) {
-			if (gp.ui.slotRow != 3) {
-				gp.ui.slotRow++;
-				gp.playSE(9);
-			}
-		}
-		if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) {
-			if (gp.ui.slotCol != 0) {
-				gp.ui.slotCol--;
-				gp.playSE(9);
-			}
-		}
-		if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) {
-			if (gp.ui.slotCol != 4) {
-				gp.ui.slotCol++;
-				gp.playSE(9);
-			}
 		}
 		if (code == KeyEvent.VK_ENTER) {
 			gp.player.selectItem();
 		}
+		
+		playInventory(code);
 		
 	}
 	
@@ -277,6 +264,108 @@ public class KeyHandler implements KeyListener{
 				gp.gameState = gp.titleState;
 				gp.restart();
 			}
+		}
+	}
+	
+	public void tradeState(int code) {
+		if (code == KeyEvent.VK_ENTER) {
+			enterPressed = true;
+		}
+		
+		if (gp.ui.subState == 0) {
+			if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
+				gp.ui.commandNum--;
+				gp.playSE(9);
+				if (gp.ui.commandNum < 0) {
+					gp.ui.commandNum = 2;
+				}
+			}
+			if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) {
+				gp.ui.commandNum++;
+				gp.playSE(9);
+				if (gp.ui.commandNum > 2) {
+					gp.ui.commandNum = 0;
+				}
+			}
+		}
+		if (gp.ui.subState == 1) {
+			npcInventory(code);
+			if (code == KeyEvent.VK_ESCAPE) {
+				gp.ui.npcSlotCol = 0;
+				gp.ui.npcSlotRow = 0;
+				gp.ui.subState = 0;
+			}			
+		}
+		if (gp.ui.subState == 2) {
+			playInventory(code);
+			if (code == KeyEvent.VK_ESCAPE) {
+				gp.ui.playerSlotCol = 0;
+				gp.ui.playerSlotRow = 0;
+				gp.ui.subState = 0;
+			}			
+		}
+		
+	}
+	
+	public void playInventory(int code) {
+		
+		 inventoryMove(code, gp.player);
+	}
+	
+	public void npcInventory(int code) {
+		
+		inventoryMove(code, gp.ui.npc);
+	}
+	
+	private void inventoryMove(int code, Entity entity) {
+		
+		// 臨時儲存 的行 (newSlotRow) 和列 (newSlotCol) 索引
+		int slotCol = 0;
+		int slotRow = 0;		
+		if (entity == gp.player) {
+			slotCol = gp.ui.playerSlotCol;
+			slotRow = gp.ui.playerSlotRow;
+		}else if (entity == gp.ui.npc) {
+			slotCol = gp.ui.npcSlotCol;
+			slotRow = gp.ui.npcSlotRow;
+		}
+		// 新 的行 (newSlotRow) 和列 (newSlotCol) 索引
+		int newSlotCol = slotCol;
+		int newSlotRow = slotRow; 
+
+		// 計算移動後 新的 行 (newSlotRow) 和列 (newSlotCol) 索引
+		if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
+			if (newSlotRow != 0) {
+				newSlotRow--;
+				gp.playSE(9);
+			}		
+		}
+		if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) {
+			if (newSlotRow != 3) {
+				newSlotRow++;
+				gp.playSE(9);
+			}
+		}
+		if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) {
+			if (newSlotCol != 0) {
+				newSlotCol--;
+				gp.playSE(9);
+			}
+		}
+		if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) {
+			if (newSlotCol != 4) {
+				newSlotCol++;
+				gp.playSE(9);
+			}
+		}
+		
+		// 更新對應的 UI 變數
+		if (entity == gp.player) {
+			gp.ui.playerSlotCol = newSlotCol;
+			gp.ui.playerSlotRow = newSlotRow;
+		}else if (entity == gp.ui.npc) {
+			gp.ui.npcSlotCol = newSlotCol;
+			gp.ui.npcSlotRow = newSlotRow;
 		}
 	}
 

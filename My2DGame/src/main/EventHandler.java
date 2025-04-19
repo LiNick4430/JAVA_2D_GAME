@@ -1,5 +1,7 @@
 package main;
 
+import entity.Entity;
+
 public class EventHandler {
 	
 	GamePanel gp;
@@ -7,18 +9,19 @@ public class EventHandler {
 	// 用於判斷事件 需要距離一定距離 才可以再次觸發
 	int previousEventX, previousEventY;
 	boolean canTouchEvent = true;
+	int tempMap, tempCol, tempRow;
 	
 	public EventHandler(GamePanel gp) {
 		this.gp = gp;
-		
+
 		// 初始化了一個二維 EventRect 陣列，用於儲存遊戲世界中的事件區域
 		eventRect = new EventRect[gp.maxMap][gp.maxWorldCol][gp.maxWorldRow];
-		
+
 		int map = 0;
 		int col = 0;
 		int row = 0;
 		while (map < gp.maxMap && col < gp.maxWorldCol && row < gp.maxWorldRow) {
-			
+
 			eventRect[map][col][row] = new EventRect();
 			eventRect[map][col][row].x = 23;
 			eventRect[map][col][row].y = 23;
@@ -26,19 +29,19 @@ public class EventHandler {
 			eventRect[map][col][row].height = 2;
 			eventRect[map][col][row].eventRectDefaultX = eventRect[map][col][row].x;
 			eventRect[map][col][row].eventRectDefaultY = eventRect[map][col][row].y;
-			
+
 			col++;
 			if (col == gp.maxWorldCol) {
 				col = 0;
 				row++;
-				
+
 				if (row == gp.maxWorldRow) {
 					row = 0;
 					map++;
 				}
 			}
 		}
-		
+
 	}
 	
 	public void checkEvent() {
@@ -58,10 +61,12 @@ public class EventHandler {
 			// 移動至其他地圖
 			else if (hit(0, 10, 39, "any") == true) { teleport(1, 12, 13); }
 			else if (hit(1, 12, 13, "any") == true) { teleport(0, 10, 39); }
+			// NPC 商店
+			else if (hit(1, 12, 9, "up") == true) { speak(gp.npc[1][0]);; }
 		}
 
 	}
-	
+	// 事件觸發條件
 	public boolean hit(int map, int col, int row, String reqDirection) {
 		
 		boolean hit = false;
@@ -90,8 +95,7 @@ public class EventHandler {
 		}
 
 		return hit;
-	}
-	
+	}	
 	// 坑洞陷阱事件
 	public void damagePit(int gameState) {
 		
@@ -127,14 +131,21 @@ public class EventHandler {
 	// 移動至其他地圖 
 	public void teleport(int map, int col, int row) {
 		
-		gp.currentMap = map;
-		gp.player.worldX = gp.tileSize * col;
-		gp.player.worldY = gp.tileSize * row;
-		
-		previousEventX = gp.player.worldX;
-		previousEventY = gp.player.worldY;
+		gp.gameState = gp.transitionState;
+		tempMap = map;
+		tempCol = col;
+		tempRow = row;
 		
 		canTouchEvent =false;
 		gp.playSE(13);
+	}	
+	// NPC 商店
+	public void speak(Entity entity) {
+		
+		if (gp.keyH.enterPressed == true) {
+			gp.gameState = gp.dialogueState;
+			gp.player.attackCanceled = true;
+			entity.speak();
+		}
 	}
 }

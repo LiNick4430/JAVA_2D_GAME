@@ -55,16 +55,16 @@ public class GamePanel extends JPanel implements Runnable {
     Config config = new Config(this);
     Thread gameThread;							// 創建和管理執行緒的類別 執行緒是程式中獨立的執行單元，可以並行執行。
     // ENTITY MAX 
-    public final int objMax = 20;
-    public final int npcMax = 10;
-    public final int monsterMax = 20;
-    public final int iTleMax = 50;
+    public final int maxobj = 20;
+    public final int maxNpc = 10;
+    public final int maxMonster = 20;
+    public final int maxiTle = 50;
     // ENTITY 
     public Player player = new Player(this,keyH);  
-    public Entity obj[][] = new Entity[maxMap][objMax]; 				// [int] 的意思是 同一時間 可以顯示 object 物件, 同時顯示太多可能會導致卡頓
-    public Entity npc[][] = new Entity[maxMap][npcMax];
-    public Entity monster[][] = new Entity[maxMap][monsterMax];
-    public InteractiveTile iTile[][] = new InteractiveTile[maxMap][iTleMax];
+    public Entity obj[][] = new Entity[maxMap][maxobj]; 				// [int] 的意思是 同一時間 可以顯示 object 物件, 同時顯示太多可能會導致卡頓
+    public Entity npc[][] = new Entity[maxMap][maxNpc];
+    public Entity monster[][] = new Entity[maxMap][maxMonster];
+    public InteractiveTile iTile[][] = new InteractiveTile[maxMap][maxiTle];
     public ArrayList<Entity> projectileList = new ArrayList<>();	// 存放 Project tile
     public ArrayList<Entity> particleList = new ArrayList<>();
     ArrayList<Entity> entityList = new ArrayList<>();				// 用於繪畫 Entity 實體   
@@ -77,6 +77,8 @@ public class GamePanel extends JPanel implements Runnable {
     public final int characterState = 4;
     public final int optionsState = 5;
     public final int gameOverState = 6;
+    public final int transitionState = 7;
+    public final int tradeState = 8;
     
         
     public GamePanel() {
@@ -114,7 +116,7 @@ public class GamePanel extends JPanel implements Runnable {
     		setFullScreen();			// 全螢幕
 		}			
     }
-    
+    // 重試 這輪 
     public void retry() {
 		
     	player.setDefaultPositions();
@@ -122,7 +124,7 @@ public class GamePanel extends JPanel implements Runnable {
     	aSetter.setNPC();				// 初始化 NPC
     	aSetter.setMonster();			// 初始化 Monster
 	}
-    
+    // 重開 新的 一輪
     public void restart() {
 		
     	player.setDefaultValues();

@@ -21,9 +21,7 @@ public class Player extends Entity {
 	public final int screenX;	// 畫面 X
 	public final int screenY;	// 畫面 Y
 	int standCounter = 0;		// 計數 無輸入的 禎數 
-	public boolean attackCanceled = false;
-	public ArrayList<Entity> inventory = new ArrayList<>();
-	public final int maxInventorySize = 20;
+	public boolean attackCanceled = false;	
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
@@ -465,7 +463,7 @@ public class Player extends Entity {
 	// 物品選擇 方法
 	public void selectItem() {
 		
-		int itemIndex = gp.ui.getItemIndexOnSolt();
+		int itemIndex = gp.ui.getItemIndexOnSolt(gp.ui.playerSlotCol, gp.ui.playerSlotRow);
 		// 檢查 itemIndex 是否小於背包 (inventory) 的大小。 確保玩家選擇的索引是有效的，防止 IndexOutOfBoundsException。
 		if (itemIndex < inventory.size()) {
 			Entity selectItem = inventory.get(itemIndex);

@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -13,7 +14,7 @@ import main.GamePanel;
 import main.UtilityTool;
 
 // 實體(Entity) 儲存變數 用在 player, monster, NPC classes, OBJ 等 任何 會 繪畫的 非背景 物件
-public class Entity {
+public abstract class Entity {
 	
 	GamePanel gp;	
 	//	Image
@@ -67,11 +68,14 @@ public class Entity {
 	public Entity currentShield;
 	public Projectile projectile;	
 	// ITEM ATTIBUTES
+	public ArrayList<Entity> inventory = new ArrayList<>();
+	public final int maxInventorySize = 20;
 	public int value;
 	public int attackValue;
 	public int defenseValue;
 	public String description = "";
 	public int useCost;	
+	public int price;
 	// TYPE
 	public int type;		
 	public final int type_player = 0;
@@ -145,27 +149,24 @@ public class Entity {
 		}
 		
 	}
-	
-	public Color getParticleColor() {
+	// GETTER Particle's Color, Size, Speed, MaxLife
+	private Color getParticleColor() {
 		Color color = null;
 		return color;
 	}
-	
-	public int getParticleSize() {
+	private int getParticleSize() {
 		int size = 0;		// PIXELS
 		return size;
 	}
-	
-	public int getParticleSpeed() {
+	private int getParticleSpeed() {
 		int speed = 0;
 		return speed;
 	}
-	
-	public int getParticleMaxLife() {
+	private int getParticleMaxLife() {
 		int maxLife = 0;
 		return maxLife;
 	}
-	
+	// 生成 爆炸特效
 	public void generateParticle(Entity generator, Entity target) {
 
 		Color color = generator.getParticleColor();
@@ -223,7 +224,7 @@ public class Entity {
 		
 		// 當 update 次數 12 以上 會將圖片順序交換
 		spriteCounter++; 	 
-		if(spriteCounter > 12) { 
+		if(spriteCounter > 24) { 
 			if(spriteNum == 1) {
 				spriteNum = 2;
 			} else if(spriteNum == 2) {

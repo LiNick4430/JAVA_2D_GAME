@@ -18,6 +18,7 @@ public class OBJ_Potion_red extends Entity{
 		value = 5;
 		down1 = setup("objects/potion_red");	
 		description = "[" +name+ "]\nHeals your life by" + value + ".";
+		price = 25;
 	}
 	
 	@Override

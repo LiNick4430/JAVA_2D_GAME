@@ -12,11 +12,12 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Sound {
 
-	Clip clip;						// Clip 物件可以將音訊資料載入到記憶體中，然後進行播放、停止、暫停、循環等操作。
-	URL soundURL[] = new URL[30];
-	FloatControl fc;
-	int volumeScale;
-	float volume;
+	private Clip clip;						// Clip 物件可以將音訊資料載入到記憶體中，然後進行播放、停止、暫停、循環等操作。
+	private URL soundURL[] = new URL[30];
+	private FloatControl fc;
+	
+	int volumeScale;	// 音量 比例
+	float volume;		// 音量 數值
 	
 	public Sound() {
 		
